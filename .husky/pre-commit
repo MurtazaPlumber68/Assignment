@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run backend tests
+cd backend && mvn test -q
+
+# Run Android lint
+cd ../android-client && ./gradlew lint -q
+
+echo "✅ Pre-commit checks passed"

@@ -1,0 +1,500 @@
+{
+  "info": {
+    "name": "WhatsApp Business Platform API",
+    "description": "Complete API collection for WhatsApp Business Platform with all endpoints and examples",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "chat_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "phone_number",
+      "value": "+1234567890",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login with Firebase Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firebaseToken\": \"your-firebase-id-token-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', response.token);",
+                  "    pm.test('Login successful', function () {",
+                  "        pm.expect(response.token).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "Get Chat List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chats?page=0&size=20&archived=false",
+              "host": ["{{base_url}}"],
+              "path": ["chats"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "archived",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create or Get Chat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"contactName\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats",
+              "host": ["{{base_url}}"],
+              "path": ["chats"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Chat Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Chat Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contactName\": \"John Smith\",\n  \"isArchived\": false,\n  \"isPinned\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Get Message History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}/messages?page=0&size=50",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}", "messages"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Text Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"text\",\n  \"to\": \"{{phone_number}}\",\n  \"text\": \"Hello! This is a test message from WhatsApp Business Platform.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Image Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"image\",\n  \"to\": \"{{phone_number}}\",\n  \"mediaId\": \"your-media-id-here\",\n  \"caption\": \"Check out this image!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Location Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"location\",\n  \"to\": \"{{phone_number}}\",\n  \"latitude\": 37.7749,\n  \"longitude\": -122.4194,\n  \"name\": \"San Francisco\",\n  \"address\": \"San Francisco, CA, USA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Interactive Button Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"interactive\",\n  \"to\": \"{{phone_number}}\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Please choose an option:\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"option_1\",\n            \"title\": \"Option 1\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"option_2\",\n            \"title\": \"Option 2\"\n          }\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chats/{{chat_id}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["chats", "{{chat_id}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Message as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"READ\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/messages/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["messages", "1", "status"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Upload Media",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "type",
+                  "value": "image",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/media/upload",
+              "host": ["{{base_url}}"],
+              "path": ["media", "upload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download Media",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/media/your-media-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["media", "your-media-id-here"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Webhook Verification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/webhook?hub.mode=subscribe&hub.challenge=test-challenge&hub.verify_token=your-verify-token",
+              "host": ["{{base_url}}"],
+              "path": ["webhook"],
+              "query": [
+                {
+                  "key": "hub.mode",
+                  "value": "subscribe"
+                },
+                {
+                  "key": "hub.challenge",
+                  "value": "test-challenge"
+                },
+                {
+                  "key": "hub.verify_token",
+                  "value": "your-verify-token"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Webhook Event (Incoming Message)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Hub-Signature-256",
+                "value": "sha256=your-hmac-signature"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"object\": \"whatsapp_business_account\",\n  \"entry\": [\n    {\n      \"id\": \"your-business-account-id\",\n      \"changes\": [\n        {\n          \"value\": {\n            \"messaging_product\": \"whatsapp\",\n            \"metadata\": {\n              \"display_phone_number\": \"15551234567\",\n              \"phone_number_id\": \"your-phone-number-id\"\n            },\n            \"messages\": [\n              {\n                \"from\": \"{{phone_number}}\",\n                \"id\": \"wamid.example\",\n                \"timestamp\": \"1234567890\",\n                \"text\": {\n                  \"body\": \"Hello from customer!\"\n                },\n                \"type\": \"text\"\n              }\n            ]\n          },\n          \"field\": \"messages\"\n        }\n      ]\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/webhook",
+              "host": ["{{base_url}}"],
+              "path": ["webhook"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Business Profile",
+      "item": [
+        {
+          "name": "Get Business Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/business/profile",
+              "host": ["{{base_url}}"],
+              "path": ["business", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Business Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"about\": \"We are a leading business providing excellent services.\",\n  \"address\": \"123 Business St, City, State 12345\",\n  \"description\": \"Your trusted business partner for all your needs.\",\n  \"email\": \"contact@business.com\",\n  \"websites\": [\"https://www.business.com\"],\n  \"vertical\": \"RETAIL\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/business/profile",
+              "host": ["{{base_url}}"],
+              "path": ["business", "profile"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health & Monitoring",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/../actuator/health",
+              "host": ["{{base_url}}"],
+              "path": ["..", "actuator", "health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/../actuator/metrics",
+              "host": ["{{base_url}}"],
+              "path": ["..", "actuator", "metrics"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Prometheus Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/../actuator/prometheus",
+              "host": ["{{base_url}}"],
+              "path": ["..", "actuator", "prometheus"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

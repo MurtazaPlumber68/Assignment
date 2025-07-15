@@ -1,0 +1,48 @@
+{
+  "name": "whatsapp-business-clone",
+  "version": "1.0.0",
+  "description": "Production-ready WhatsApp Business Platform clone",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "commit": "git-cz",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/whatsapp-business-clone.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "business",
+    "messaging",
+    "spring-boot",
+    "android",
+    "microservices"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/username/whatsapp-business-clone/issues"
+  },
+  "homepage": "https://github.com/username/whatsapp-business-clone#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  }
+}
